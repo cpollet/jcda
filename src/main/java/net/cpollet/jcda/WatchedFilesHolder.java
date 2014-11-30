@@ -23,30 +23,30 @@ import java.util.List;
 /**
  * @author Christophe Pollet
  */
-public class ClassesHolder {
-	List<String> classes;
+public class WatchedFilesHolder {
+	List<String> files;
 
-	public ClassesHolder(String file) {
-		classes = loadClasses(file);
+	public WatchedFilesHolder(String file) {
+		files = loadFiles(file);
 	}
 
 	public boolean isWatched(String className) {
-		return classes.contains(className);
+		return files.contains(className);
 	}
 
-	public int getIndexOf(String className) {
-		return classes.indexOf(className);
+	public int indexOf(String className) {
+		return files.indexOf(className);
 	}
 
-	public String getClassAt(int index) {
-		return classes.get(index);
+	public String get(int index) {
+		return files.get(index);
 	}
 
 	public int size() {
-		return classes.size();
+		return files.size();
 	}
 
-	private List<String> loadClasses(String file) {
+	private List<String> loadFiles(String file) {
 		List<String> classes = new LinkedList<>();
 
 		try {
@@ -72,9 +72,10 @@ public class ClassesHolder {
 
 	@Override
 	public String toString() {
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < classes.size(); i++) {
-			sb.append(i).append(" ").append(classes.get(i)).append("\n");
+		StringBuilder sb = new StringBuilder();
+
+		for (int i = 0; i < files.size(); i++) {
+			sb.append(i).append(" ").append(files.get(i)).append("\n");
 		}
 
 		return sb.toString();

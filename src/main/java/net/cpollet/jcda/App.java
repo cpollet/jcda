@@ -13,16 +13,17 @@ import java.util.List;
  */
 public class App {
 	public static void main(String[] args) throws IOException {
-		ClassesHolder classesHolder = new ClassesHolder(args[0]);
-		MatrixHolder matrixHolder = new MatrixHolder(classesHolder.size(), classesHolder.size());
+		WatchedFilesHolder watchedFilesHolder = new WatchedFilesHolder(args[0]);
+		MatrixHolder matrixHolder = new MatrixHolder(watchedFilesHolder.size(), watchedFilesHolder.size());
 
-		new ChangesetScanner(args[1], classesHolder, Arrays.asList((ChangesetListener) matrixHolder));
+		ChangesetScanner changesetScanner = new ChangesetScanner(watchedFilesHolder, Arrays.asList((ChangesetListener) matrixHolder));
+		changesetScanner.run(args[1]);
 
 		SparseMatrix sm = matrixHolder.getMatrix();
 
 		MarkovClustering mc = new MarkovClustering();
 
-		System.out.println(classesHolder);
+		System.out.println(watchedFilesHolder);
 		System.out.println(sm.toStringDense());
 		System.out.println();
 		SparseMatrix sm2 = mc.run(sm, 0.00001, 2, 2, 0.01);
@@ -31,17 +32,17 @@ public class App {
 
 		List<Cluster> clusters = new LinkedList<>();
 
-		for (int i = 0; i < classesHolder.size(); i++) {
+		for (int i = 0; i < watchedFilesHolder.size(); i++) {
 			double[] row = sm2.get(i).getDense();
 
-			Cluster cluster = new Cluster(classesHolder.getClassAt(i));
+			Cluster cluster = new Cluster(watchedFilesHolder.get(i));
 
 			for (int j = 0; j < row.length; j++) {
 				if (row[j] > 0) {
-					cluster.add(classesHolder.getClassAt(j));
+					cluster.add(watchedFilesHolder.get(j));
 				}
 			}
-			// System.out.println(cluster);
+
 			merge(clusters, cluster);
 		}
 

@@ -16,6 +16,8 @@
 
 package net.cpollet.jcda;
 
+import net.sf.javaml.matrix.Matrix;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -25,16 +27,15 @@ import java.util.List;
  * @author Christophe Pollet
  */
 public class ChangesetScanner {
-	private final ClassesHolder watched;
-	private final List<ChangesetListener> changesetListeners;
+	private final WatchedFilesHolder watchedFiles;
+	private MatrixHolder matrixHolder;
 
-	public ChangesetScanner(String file, ClassesHolder watched, List<ChangesetListener> changesetListeners) {
-		this.watched = watched;
-		this.changesetListeners = changesetListeners;
-		readChangeset(file);
+	public ChangesetScanner(WatchedFilesHolder watchedFiles, MatrixHolder matrixHolder) {
+		this.watchedFiles = watchedFiles;
+		this.matrixHolder = matrixHolder;
 	}
 
-	private List<String> readChangeset(String file) {
+	public List<String> run(String file) {
 		List<String> classes = new LinkedList<>();
 
 		try {
@@ -66,7 +67,7 @@ public class ChangesetScanner {
 				String fileA = filesInChangeset.get(i);
 				String fileB = filesInChangeset.get(j);
 
-				if (watched.isWatched(fileA) && watched.isWatched(fileB)) {
+				if (watchedFiles.isWatched(fileA) && watchedFiles.isWatched(fileB)) {
 					incrementChangeCount(fileA, fileB);
 				}
 			}
@@ -74,11 +75,9 @@ public class ChangesetScanner {
 	}
 
 	private void incrementChangeCount(String fileA, String fileB) {
-		int iA = watched.getIndexOf(fileA);
-		int iB = watched.getIndexOf(fileB);
+		int iA = watchedFiles.indexOf(fileA);
+		int iB = watchedFiles.indexOf(fileB);
 
-		for (ChangesetListener changesetListener : changesetListeners) {
-			changesetListener.increment(iA, iB);
-		}
+		matrixHolder.increment(iA, iB);
 	}
 }

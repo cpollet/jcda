@@ -22,7 +22,7 @@ import net.sf.javaml.clustering.mcl.SparseVector;
 /**
  * @author Christophe Pollet
  */
-public class MatrixHolder implements ChangesetListener {
+public class MatrixHolder {
 	private final SparseMatrix matrix;
 
 	public MatrixHolder(int x, int y) {
@@ -32,10 +32,7 @@ public class MatrixHolder implements ChangesetListener {
 		}
 	}
 
-	@Override
 	public void increment(int x, int y) {
-		double newValue = matrix.get(x, y) + 1;
-
 		matrix.add(x, y, 1);
 		matrix.add(y, x, 1);
 	}
