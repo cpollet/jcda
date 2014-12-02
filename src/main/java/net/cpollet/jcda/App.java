@@ -4,7 +4,6 @@ import net.sf.javaml.clustering.mcl.MarkovClustering;
 import net.sf.javaml.clustering.mcl.SparseMatrix;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -16,7 +15,7 @@ public class App {
 		WatchedFilesHolder watchedFilesHolder = new WatchedFilesHolder(args[0]);
 		MatrixHolder matrixHolder = new MatrixHolder(watchedFilesHolder.size(), watchedFilesHolder.size());
 
-		ChangesetScanner changesetScanner = new ChangesetScanner(watchedFilesHolder, Arrays.asList((ChangesetListener) matrixHolder));
+		ChangesetScanner changesetScanner = new ChangesetScanner(watchedFilesHolder, matrixHolder);
 		changesetScanner.run(args[1]);
 
 		SparseMatrix sm = matrixHolder.getMatrix();
